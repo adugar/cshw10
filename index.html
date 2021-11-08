@@ -1,0 +1,75 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>JSON Demo</title>
+	<meta charset="utf-8"/>
+	<script language="javascript">
+		function loadMessages() {
+			/* Step 1: Make instance of XHR object...
+			...to make HTTP request after page is loaded*/
+			request = new XMLHttpRequest();
+			console.log("1: created request");
+ 
+		// Step 2: Open the JSON file at remote location
+ 
+			request.open("GET", "https://www.metaweather.com/api/location/2367105/", true);
+
+			console.log("2: open success");
+ 	
+			// Step 3: set up callback for when HTTP response is returned (i.e., you get the JSON file back)
+
+			request.onreadystatechange = function() {
+				console.log("3:  event fired");
+			
+ 
+				if (request.readyState == 4 && request.status == 200) {
+
+					// Step 5: when we get all the JSON data back, parse it and use it
+					console.log("5:  data is ready");
+					theData = request.responseText;
+					returnHTML = theData;
+					data = JSON.parse(theData);
+					console.log(data);
+					returnHTML += "<br>"+
+						data["description"];
+
+					document.getElementById("messages").innerHTML =returnHTML;
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+
+					document.getElementById("messages").innerHTML = "Whoops, something went terribly wrong!";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					console.log("6:  ready state 3- request received,data being sent");
+					document.getElementById("messages").innerHTML = "Come back soon!";
+
+				}
+
+			}//end on readystate change
+	
+		// Step 4: fire off the HTTP request
+			request.send();
+			console.log("4 request sent");
+		}
+	</script>
+</head>
+
+
+<body onload="loadMessages()" style="text-align:center">
+	<h1>JSON Data</h1>
+	<h3>Selected API</h3>
+    <p>The API I selected is called metaweather. It takes in a location ID<br>and returns the weather and other information in a JSON format.</p>
+    <h3>Website Used</h3>
+    <p>The website I used is <a href="https://www.metaweather.com/api/">https://www.metaweather.com/api/</a>.</p>
+    <h3>Options Used</h3>
+    <p>The route I called was the /api/location/2367105/ on the metaweather API. <br>The 2367105 is the geographic ID for Boston that the API used to identify the location.</p>
+    <h3>Applications</h3>
+    <p>One application where this site is useful is if you want to display the weather on your own website. <br>Since this API is free, it is easy to show the weather for any location.
+    <br>Also, you could change the content of your page depending on the weather.<br>For example, if it's snowing you could add snowing animations to the background for a cool effect.</p>
+    <div id="messages">Test</div>
+</body>
+</html>
